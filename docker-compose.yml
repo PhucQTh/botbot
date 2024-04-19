@@ -1,0 +1,13 @@
+version: "1"
+services:
+  chatbot:
+    build:
+      context: .
+    container_name: chatbot
+    # ports:
+    #   - "4000:4000" # map 80 in container => 3000 in local
+    restart: always
+    volumes:
+      - bot-data:/app
+volumes:
+  bot-data:

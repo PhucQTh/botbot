@@ -65,7 +65,7 @@ const chartGenagator = async (data, title) => {
       datasets: [
         {
           data,
-          backgroundColor:["#FF0000", "#008000"]
+          backgroundColor: ['#FF0000', '#008000'],
         },
       ],
     },
@@ -144,16 +144,24 @@ const getData = async (crypto = 'BTC', period = '1w') => {
 };
 
 const getPrice = async (crypto = 'BTC') => {
-  const link = `https://api.binance.com/api/v3/ticker/price?symbol=${crypto.toUpperCase()}USDT`;
-  const { data } = await axios.get(link);
-  return data;
+  try {
+    const link = `https://api.binance.com/api/v3/ticker/price?symbol=${crypto.toUpperCase()}USDT`;
+    const { data } = await axios.get(link);
+    return data;
+  } catch (error) {
+    return 'error';
+  }
 };
 const getPricePercent = async (crypto = 'BTC') => {
-  const link = `https://api.binance.com/api/v3/ticker/24hr?symbol=${crypto.toUpperCase()}USDT`;
-  const { data } = await axios.get(link);
-  const { lastPrice, priceChangePercent } = data;
-  return { lastPrice, priceChangePercent };
-}
+  try {
+    const link = `https://api.binance.com/api/v3/ticker/24hr?symbol=${crypto.toUpperCase()}USDT`;
+    const { data } = await axios.get(link);
+    const { lastPrice, priceChangePercent } = data;
+    return { lastPrice, priceChangePercent };
+  } catch (error) {
+    return 'error';
+  }
+};
 const priceFormat = (price) => {
   const num = Number(price);
   let formattedPrice = num < 10 ? num.toFixed(6) : num.toFixed(2);
@@ -169,4 +177,10 @@ const priceFormat = (price) => {
 
   return formattedPrice;
 };
-module.exports = { chartGenagator, getData, getPrice, priceFormat, getPricePercent };
+module.exports = {
+  chartGenagator,
+  getData,
+  getPrice,
+  priceFormat,
+  getPricePercent,
+};
