@@ -22,7 +22,19 @@ bot.on('message', async (ctx) => {
   const crypto = ctxArr[1];
   const timePeriod = ctxArr[2];
   try {
-    if (message.match(/c/)) {
+    // Extract the command from the message.
+    // The regular expression looks for a string starting with '/'
+    // followed by one or more word characters (e.g., /command, /myCommand).
+    // The exec() method returns the matched substring and its captured groups.
+    // The captured group is the command itself (e.g., 'command').
+    // The question mark after the array indexing ensures that the code doesn't throw an error
+    // if the regular expression doesn't find a match (i.e., if the message doesn't start with '/').
+    // The [1] indexing retrieves the value of the first captured group.
+    // The i flag after the regular expression makes the search case-insensitive.
+    // The ?. operator is the optional chaining operator, which returns undefined if the left-hand side is null or undefined,
+    // instead of throwing a TypeError.
+    const command = /^\/(\w+)/i.exec(message)?.[1];
+    if (command === 'c' || command === 'chart') {
       /* ------------------------------- check coin ------------------------------- */
       const pricePercent = await getPricePercent(crypto);
       if (pricePercent === 'error') {
@@ -43,7 +55,7 @@ bot.on('message', async (ctx) => {
           parse_mode: 'HTML',
         });
       }
-    } else if (message.match(/p/)) {
+    } else if (command === 'p' || command === 'price') {
       /* ------------------------------- check coin ------------------------------- */
       const data = await getPrice(crypto);
       if (data === 'error') {
@@ -52,14 +64,12 @@ bot.on('message', async (ctx) => {
         const { symbol, price } = data;
         await ctx.reply(`${symbol}: ${priceFormat(price)}`);
       }
-    } else if (message.match(/all/)) {
-      const users = await getUsers();   
+    } else if (command === 'all') {
+      const users = await getUsers();
       const userList = users.map((user) => `@${user}`).join(' ');
       ctx.reply(`Vô kèo nè mọi người, ${userList}`);
-    } else if (message.match(/addme/)) {
-      addUser(userName).then(
-        ctx.reply(`@${userName} đang thêm vô với bot`)
-      );
+    } else if (command === 'addme') {
+      addUser(userName).then(ctx.reply(`@${userName} đang thêm vô với bot`));
     } else {
       ctx.reply('Hong hiểu...');
     }
