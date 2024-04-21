@@ -9,6 +9,8 @@ const {
   getPricePercent,
 } = require('./ultis');
 const { addUser, dbInit, getUsers } = require('./db.js');
+const express = require('express')
+
 const TOKEN = '6985227556:AAGvvUX9ew1BBHT5373XQA3ExB32Wu2Zw-4';
 const bot = new Telegraf(TOKEN);
 
@@ -67,3 +69,15 @@ bot.on('message', async (ctx) => {
 });
 dbInit();
 bot.launch();
+
+
+const app = express()
+const port = process.env.PORT || 4000;
+
+app.get('/', (req, res) => {
+  res.send('Hello World!')
+})
+
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
+})
