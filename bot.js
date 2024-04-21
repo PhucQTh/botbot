@@ -8,6 +8,7 @@ const {
   priceFormat,
   getPricePercent,
 } = require('./ultis');
+const { addUser, dbInit, getUsers } = require('./db.js');
 const TOKEN = '6985227556:AAGvvUX9ew1BBHT5373XQA3ExB32Wu2Zw-4';
 const bot = new Telegraf(TOKEN);
 
@@ -52,9 +53,17 @@ bot.on('message', async (ctx) => {
         await ctx.reply(`${symbol}: ${priceFormat(price)}`);
       }
     } else if (message.match(/all/)) {
+      const users = await getUsers();   
+      const userList = users.map((user) => `@${user}`).join(' ');
+      ctx.reply(`Vô kèo nè mọi người, ${userList}`);
+    } else if (message.match(/addme/)) {
+      addUser(userName).then(
+        ctx.reply(`@${userName} đang thêm vô với bot`)
+      );
     } else {
       ctx.reply('Hong hiểu...');
     }
   } catch (error) {}
 });
+dbInit();
 bot.launch();
