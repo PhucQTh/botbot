@@ -33,7 +33,8 @@ bot.on('message', async (ctx) => {
     // The i flag after the regular expression makes the search case-insensitive.
     // The ?. operator is the optional chaining operator, which returns undefined if the left-hand side is null or undefined,
     // instead of throwing a TypeError.
-    const command = /^\/(\w+)/i.exec(message)?.[1];
+    const commandTemp = /^\/(\w+)/i.exec(message);
+    const command = commandTemp ? commandTemp[1] : undefined;
     if (command === 'c' || command === 'chart') {
       /* ------------------------------- check coin ------------------------------- */
       const pricePercent = await getPricePercent(crypto);
